@@ -5,10 +5,14 @@ import { randomUUID } from 'node:crypto'
 import { checkSessionIdExist } from '../middlewares/check-session-id-exists'
 
 export async function transactionRoutes(app: FastifyInstance) {
+
+ 
   app.get(
     '/',
     {
+      
       preHandler: [checkSessionIdExist],
+
     },
     async (request) => {
       const { sessionId } = request.cookies
@@ -85,11 +89,11 @@ export async function transactionRoutes(app: FastifyInstance) {
 
         reply.cookie('sessionId', sessionId, {
           path: '/',
-          maxAge: 1000 * 60, // 7 days
+          maxAge: 1000 * 60 * 24, // 7 days
         })
       }
 
-      console.log(reply.cookie)
+    //  console.log(reply.cookie)
 
       await knex('transactions').insert({
         id: randomUUID(),
@@ -97,7 +101,7 @@ export async function transactionRoutes(app: FastifyInstance) {
         amount: type === 'credit' ? amount : amount * -1,
         session_id: sessionId,
       })
-
+      
       return reply.status(201).send()
     },
   )

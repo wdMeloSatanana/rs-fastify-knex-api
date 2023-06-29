@@ -11,4 +11,5 @@ export async function checkSessionIdExist(
       error: 'Unauthorized',
     })
   }
+  
 }
